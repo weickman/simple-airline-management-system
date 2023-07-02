@@ -98,16 +98,6 @@ create table flight (
     foreign key (airplane) references airplane(tail_num)
 ) ENGINE=InnoDB;
 
-drop table if exists routes_contain;
-create table routes_contain (
-	leg varchar(6),
-    route varchar(20),
-    sequence_number integer,
-    primary key (leg, route),
-    foreign key (leg) references leg(legID),
-    foreign key (route) references route(routeID)
-) ENGINE=InnoDB;
-
 drop table if exists person;
 create table person (
 	personID integer,
@@ -141,16 +131,6 @@ create table passenger (
     foreign key (personID) references person(personID)
 ) ENGINE=InnoDB;
 
-drop table if exists vacation;
-create table vacation (
-	personID integer,
-    destination_airport char(3),
-    stop_number integer,
-    primary key (personID, destination_airport, stop_number),
-    foreign key (personID) references person(personID),
-    foreign key (destination_airport) references aiport(airportID)
-) ENGINE=InnoDB;
-
 drop table if exists airport;
 create table airport (
 	airportID char(3),
@@ -173,4 +153,24 @@ create table leg (
     primary key (legID),
     foreign key (start_airport) references airport(airportID),
     foreign key (end_airport) references airport(airportID)
+) ENGINE=InnoDB;
+
+drop table if exists vacation;
+create table vacation (
+	personID integer,
+    destination_airport char(3),
+    stop_number integer,
+    primary key (personID, destination_airport, stop_number),
+    foreign key (personID) references person(personID),
+    foreign key (destination_airport) references aiport(airportID)
+) ENGINE=InnoDB;
+
+drop table if exists routes_contain;
+create table routes_contain (
+	leg varchar(6),
+    route varchar(20),
+    sequence_number integer,
+    primary key (leg, route),
+    foreign key (leg) references leg(legID),
+    foreign key (route) references route(routeID)
 ) ENGINE=InnoDB;
