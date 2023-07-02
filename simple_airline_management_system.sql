@@ -43,17 +43,17 @@ create table route (
 drop table if exists airline;
 create table airline (
 	airlineID varchar(20),
-    revenue float,
+    revenue float not null,
     primary key (airlineID)
 ) ENGINE=InnoDB;
-
+ 
 drop table if exists airplane;
 create table airplane (
 	airlineID varchar(20),
 	tail_num char(6),
-    speed integer,
-    seat_capacity integer,
-    locationID char(8),
+    speed integer not null,
+    seat_capacity integer check (seat_capacity > 0),
+    locationID char(8) not null,
     primary key (airlineID, tail_num),
     unique key (tail_num),
     foreign key (airlineID) references airline(airlineID) on delete restrict on update cascade,
@@ -64,8 +64,8 @@ drop table if exists prop;
 create table prop (
 	airlineID varchar(20),
 	tail_num char(6),
-    num_props integer,
-    skids boolean,
+    num_props integer check (num_props > 0),
+    skids boolean not null,
     primary key (airlineID, tail_num),
     foreign key (airlineID) references airplane(airlineID) on delete restrict on update cascade,
     foreign key (tail_num) references airplane(tail_num) on update restrict on delete cascade
@@ -75,7 +75,7 @@ drop table if exists jet;
 create table jet (
 	airlineID varchar(20),
 	tail_num char(6),
-    num_engines integer,
+    num_engines integer check (num_engines > 0),
     primary key (airlineID, tail_num),
     foreign key (airlineID) references airplane(airlineID) on delete restrict on update cascade,
     foreign key (tail_num) references airplane(tail_num) on update restrict on delete cascade
@@ -126,7 +126,8 @@ create table pilot (
 drop table if exists passenger;
 create table passenger (
 	personID integer,
-    miles integer,
+    miles integer not null,
+    funds float check (funds >= 0),
     primary key (personID),
     foreign key (personID) references person(personID) on update restrict on delete cascade
 ) ENGINE=InnoDB;
@@ -134,11 +135,11 @@ create table passenger (
 drop table if exists airport;
 create table airport (
 	airportID char(3),
-    full_name varchar(100),
-    city varchar(50),
-    state varchar(50),
-    country char(3),
-    locationID char(8),
+    full_name varchar(100) not null,
+    city varchar(50) not null,
+    state varchar(50) not null,
+    country char(3) not null,
+    locationID char(8) not null,
     primary key (airportID),
     unique key (locationID),
     foreign key (locationID) references location(locID) on delete restrict on update restrict
@@ -147,9 +148,9 @@ create table airport (
 drop table if exists leg;
 create table leg (
 	legID varchar(6),
-    distance integer,
-    start_airport char(3),
-    end_airport char(3),
+    distance integer check (distance > 0),
+    start_airport char(3) not null,
+    end_airport char(3) not null,
     primary key (legID),
     foreign key (start_airport) references airport(airportID) on update restrict on delete restrict,
     foreign key (end_airport) references airport(airportID) on update restrict on delete restrict
@@ -159,7 +160,7 @@ drop table if exists vacation;
 create table vacation (
 	personID integer,
     destination_airport char(3),
-    stop_number integer,
+    stop_number integer check (stop_number > 0),
     primary key (personID, destination_airport, stop_number),
     foreign key (personID) references person(personID) on update restrict on delete cascade,
     foreign key (destination_airport) references airport(airportID) on update restrict on delete restrict
@@ -169,7 +170,7 @@ drop table if exists routes_contain;
 create table routes_contain (
 	leg varchar(6),
     route varchar(20),
-    sequence_number integer,
+    sequence_number integer check (sequence_number > 0),
     primary key (leg, route),
     foreign key (leg) references leg(legID) on delete restrict on update restrict,
     foreign key (route) references route(routeID) on delete restrict on update restrict
