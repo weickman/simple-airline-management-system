@@ -36,20 +36,20 @@ create table location (
 
 drop table if exists route;
 create table route (
-	routeID varchar(20),
+	routeID varchar(30),
     primary key (routeID)
 ) ENGINE=InnoDB;
 
 drop table if exists airline;
 create table airline (
-	airlineID varchar(20),
+	airlineID varchar(30),
     revenue float not null,
     primary key (airlineID)
 ) ENGINE=InnoDB;
  
 drop table if exists airplane;
 create table airplane (
-	airlineID varchar(20),
+	airlineID varchar(30),
 	tail_num char(6),
     speed integer not null,
     seat_capacity integer check (seat_capacity > 0),
@@ -62,7 +62,7 @@ create table airplane (
 
 drop table if exists prop;
 create table prop (
-	airlineID varchar(20),
+	airlineID varchar(30),
 	tail_num char(6),
     num_props integer check (num_props > 0),
     skids boolean not null,
@@ -73,7 +73,7 @@ create table prop (
 
 drop table if exists jet;
 create table jet (
-	airlineID varchar(20),
+	airlineID varchar(30),
 	tail_num char(6),
     num_engines integer check (num_engines > 0),
     primary key (airlineID, tail_num),
@@ -84,9 +84,9 @@ create table jet (
 drop table if exists flight;
 create table flight (
 	flightID char(5),
-    route varchar(20),
+    route varchar(30),
     cost float,
-    airline varchar(20),
+    airline varchar(30),
     airplane char(6),
     progress integer,
     flight_status char(9),
@@ -169,7 +169,7 @@ create table vacation (
 drop table if exists routes_contain;
 create table routes_contain (
 	leg varchar(6),
-    route varchar(20),
+    route varchar(30),
     sequence_number integer check (sequence_number > 0),
     primary key (leg, route),
     foreign key (leg) references leg(legID) on delete restrict on update restrict,
