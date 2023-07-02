@@ -56,8 +56,8 @@ create table airplane (
     locationID char(8),
     primary key (airlineID, tail_num),
     unique key (tail_num),
-    foreign key (airlineID) references airline(airlineID),
-    foreign key (locationID) references  location(locID)
+    foreign key (airlineID) references airline(airlineID) on delete restrict on update cascade,
+    foreign key (locationID) references  location(locID) on delete cascade on update restrict
 ) ENGINE=InnoDB;
 
 drop table if exists prop;
@@ -67,8 +67,8 @@ create table prop (
     num_props integer,
     skids boolean,
     primary key (airlineID, tail_num),
-    foreign key (airlineID) references airplane(airlineID),
-    foreign key (tail_num) references airplane(tail_num)
+    foreign key (airlineID) references airplane(airlineID) on delete restrict on update cascade,
+    foreign key (tail_num) references airplane(tail_num) on update restrict on delete cascade
 ) ENGINE=InnoDB;
 
 drop table if exists jet;
@@ -77,8 +77,8 @@ create table jet (
 	tail_num char(6),
     num_engines integer,
     primary key (airlineID, tail_num),
-    foreign key (airlineID) references airplane(airlineID),
-    foreign key (tail_num) references airplane(tail_num)
+    foreign key (airlineID) references airplane(airlineID) on delete restrict on update cascade,
+    foreign key (tail_num) references airplane(tail_num) on update restrict on delete cascade
 ) ENGINE=InnoDB;
 
 drop table if exists flight;
@@ -93,9 +93,9 @@ create table flight (
     next_time time,
     primary key (flightID),
     unique key (airline, airplane),
-    foreign key (route) references route(routeID),
-    foreign key (airline) references airplane(airlineID),
-    foreign key (airplane) references airplane(tail_num)
+    foreign key (route) references route(routeID) on update restrict on delete restrict,
+    foreign key (airline) references airplane(airlineID) on delete restrict on update cascade,
+    foreign key (airplane) references airplane(tail_num) on update restrict on delete cascade
 ) ENGINE=InnoDB;
 
 drop table if exists person;
@@ -105,7 +105,7 @@ create table person (
     lname varchar(100),
     current_location char(8),
     primary key (personID),
-    foreign key (current_location) references location(locID)
+    foreign key (current_location) references location(locID) on delete restrict on update restrict
 ) ENGINE=InnoDB;
 
 drop table if exists pilot;
@@ -119,8 +119,8 @@ create table pilot (
     has_test_license boolean,
     primary key (personID),
     unique key (taxID),
-    foreign key (personID) references person(personID),
-    foreign key (current_flight) references flight(flightID)
+    foreign key (personID) references person(personID) on delete cascade on update cascade,
+    foreign key (current_flight) references flight(flightID) on delete set null on update cascade
 ) ENGINE=InnoDB;
 
 drop table if exists passenger;
@@ -128,7 +128,7 @@ create table passenger (
 	personID integer,
     miles integer,
     primary key (personID),
-    foreign key (personID) references person(personID)
+    foreign key (personID) references person(personID) on update restrict on delete cascade
 ) ENGINE=InnoDB;
 
 drop table if exists airport;
@@ -141,7 +141,7 @@ create table airport (
     locationID char(8),
     primary key (airportID),
     unique key (locationID),
-    foreign key (locationID) references location(locID)
+    foreign key (locationID) references location(locID) on delete restrict on update restrict
 ) ENGINE=InnoDB;
 
 drop table if exists leg;
@@ -151,8 +151,8 @@ create table leg (
     start_airport char(3),
     end_airport char(3),
     primary key (legID),
-    foreign key (start_airport) references airport(airportID),
-    foreign key (end_airport) references airport(airportID)
+    foreign key (start_airport) references airport(airportID) on update restrict on delete restrict,
+    foreign key (end_airport) references airport(airportID) on update restrict on delete restrict
 ) ENGINE=InnoDB;
 
 drop table if exists vacation;
@@ -161,8 +161,8 @@ create table vacation (
     destination_airport char(3),
     stop_number integer,
     primary key (personID, destination_airport, stop_number),
-    foreign key (personID) references person(personID),
-    foreign key (destination_airport) references airport(airportID)
+    foreign key (personID) references person(personID) on update restrict on delete cascade,
+    foreign key (destination_airport) references airport(airportID) on update restrict on delete restrict
 ) ENGINE=InnoDB;
 
 drop table if exists routes_contain;
@@ -171,6 +171,6 @@ create table routes_contain (
     route varchar(20),
     sequence_number integer,
     primary key (leg, route),
-    foreign key (leg) references leg(legID),
-    foreign key (route) references route(routeID)
+    foreign key (leg) references leg(legID) on delete restrict on update restrict,
+    foreign key (route) references route(routeID) on delete restrict on update restrict
 ) ENGINE=InnoDB;
