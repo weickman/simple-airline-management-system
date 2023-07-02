@@ -30,40 +30,40 @@ all of the data, and supports as many of the constraints as reasonably possible.
 -- loc_type is either "plane" or "port". Could also be an integer?
 drop table if exists location;
 create table location (
-	locID integer,
-    loc_type varchar(5),
+	locID char(8),
     primary key (locID)
 ) ENGINE=InnoDB;
 
 drop table if exists route;
 create table route (
-	routeID integer,
+	routeID varchar(20),
     primary key (routeID)
 ) ENGINE=InnoDB;
 
 drop table if exists airline;
 create table airline (
-	airlineID integer,
-    revenue integer,
+	airlineID varchar(20),
+    revenue float,
     primary key (airlineID)
 ) ENGINE=InnoDB;
 
 drop table if exists airplane;
 create table airplane (
-	airlineID integer,
-	tail_num integer,
+	airlineID varchar(20),
+	tail_num char(6),
     speed integer,
     seat_capacity integer,
-    locationID integer,
+    locationID char(8),
     primary key (airlineID, tail_num),
+    unique key (tail_num),
     foreign key (airlineID) references airline(airlineID),
     foreign key (locationID) references  location(locID)
 ) ENGINE=InnoDB;
 
 drop table if exists prop;
 create table prop (
-	airlineID integer,
-	tail_num integer,
+	airlineID varchar(20),
+	tail_num char(6),
     num_props integer,
     skids boolean,
     primary key (airlineID, tail_num),
@@ -73,8 +73,8 @@ create table prop (
 
 drop table if exists jet;
 create table jet (
-	airlineID integer,
-	tail_num integer,
+	airlineID varchar(20),
+	tail_num char(6),
     num_engines integer,
     primary key (airlineID, tail_num),
     foreign key (airlineID) references airplane(airlineID),
@@ -83,14 +83,14 @@ create table jet (
 
 drop table if exists flight;
 create table flight (
-	flightID integer,
-    route integer,
-    cost integer,
-    airline integer,
-    airplane integer,
+	flightID char(5),
+    route varchar(20),
+    cost float,
+    airline varchar(20),
+    airplane char(6),
     progress integer,
-    flight_status integer,
-    next_time integer,
+    flight_status char(9),
+    next_time time,
     primary key (flightID),
     unique key (airline, airplane),
     foreign key (route) references route(routeID),
@@ -100,18 +100,20 @@ create table flight (
 
 drop table if exists routes_contain;
 create table routes_contain (
-	leg integer,
-    route integer,
+	leg varchar(6),
+    route varchar(20),
     sequence_number integer,
-    primary key (leg, route, sequence_number)
+    primary key (leg, route),
+    foreign key (leg) references leg(legID),
+    foreign key (route) references route(routeID)
 ) ENGINE=InnoDB;
 
 drop table if exists person;
 create table person (
 	personID integer,
-    fname integer,
-    lname integer,
-    current_location integer,
+    fname varchar(100) not null,
+    lname varchar(100),
+    current_location char(8),
     primary key (personID),
     foreign key (current_location) references location(locID)
 ) ENGINE=InnoDB;
@@ -119,15 +121,16 @@ create table person (
 drop table if exists pilot;
 create table pilot (
 	personID integer,
-    taxID integer,
+    taxID char(11),
     experience integer,
-    current_flight integer,
+    current_flight char(5),
     has_jet_license boolean,
     has_prop_license boolean,
     has_test_license boolean,
     primary key (personID),
     unique key (taxID),
-    foreign key (personID) references person(personID)
+    foreign key (personID) references person(personID),
+    foreign key (current_flight) references flight(flightID)
 ) ENGINE=InnoDB;
 
 drop table if exists passenger;
@@ -141,20 +144,21 @@ create table passenger (
 drop table if exists vacation;
 create table vacation (
 	personID integer,
-    destination_airport integer,
+    destination_airport char(3),
     stop_number integer,
     primary key (personID, destination_airport, stop_number),
-    foreign key (personID) references person(personID)
+    foreign key (personID) references person(personID),
+    foreign key (destination_airport) references aiport(airportID)
 ) ENGINE=InnoDB;
 
 drop table if exists airport;
 create table airport (
-	airportID integer,
-    full_name integer,
-    city integer,
-    state integer,
-    country integer,
-    locationID integer,
+	airportID char(3),
+    full_name varchar(100),
+    city varchar(50),
+    state varchar(50),
+    country char(3),
+    locationID char(8),
     primary key (airportID),
     unique key (locationID),
     foreign key (locationID) references location(locID)
@@ -162,10 +166,10 @@ create table airport (
 
 drop table if exists leg;
 create table leg (
-	legID integer,
+	legID varchar(6),
     distance integer,
-    start_airport integer,
-    end_airport integer,
+    start_airport char(3),
+    end_airport char(3),
     primary key (legID),
     foreign key (start_airport) references airport(airportID),
     foreign key (end_airport) references airport(airportID)
