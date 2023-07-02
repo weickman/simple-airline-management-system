@@ -160,8 +160,8 @@ drop table if exists vacation;
 create table vacation (
 	personID integer,
     destination_airport char(3),
-    stop_number integer check (stop_number > 0),
-    primary key (personID, destination_airport, stop_number),
+    sequence_number integer check (sequence_number > 0),
+    primary key (personID, destination_airport, sequence_number),
     foreign key (personID) references person(personID) on update restrict on delete cascade,
     foreign key (destination_airport) references airport(airportID) on update restrict on delete restrict
 ) ENGINE=InnoDB;
