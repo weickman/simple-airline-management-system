@@ -162,7 +162,7 @@ create table vacation (
     stop_number integer,
     primary key (personID, destination_airport, stop_number),
     foreign key (personID) references person(personID),
-    foreign key (destination_airport) references aiport(airportID)
+    foreign key (destination_airport) references airport(airportID)
 ) ENGINE=InnoDB;
 
 drop table if exists routes_contain;
