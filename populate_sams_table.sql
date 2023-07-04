@@ -143,7 +143,7 @@ insert into jet (airlineID, tail_num, num_engines) values
 ('American', 'n553qn', 2);
 
 -- Flight
-insert into flight (flightID, route, airline, airplane, progress, flight_status, next_time, cost) values
+insert into flight (flightID, route, airline, tail_num, progress, flight_status, next_time, cost) values
 ('dl_10', 'americas_one', 'Delta', 'n106js', 1, 'in_flight', '08:00:00', 200),
 ('un_38', 'americas_three', 'United', 'n380sd', 2, 'in_flight', '14:30:00', 200),
 ('ba_61', 'americas_two', 'British Airways', 'n616lt', 0, 'on_ground', '09:30:00', 200),
@@ -340,8 +340,8 @@ insert into vacation (personID, destination_airport, sequence_number) values
 (39, 'MUC', 1),
 (40, 'HND', 1);
 
--- Routes_contain
-insert into routes_contain (route, leg, sequence_number) values
+-- Contains
+insert into contains (route, leg, sequence_number) values
 ('americas_hub_exchange', 4, 1),
 ('americas_one', 2, 1),
 ('americas_one', 1, 2),
