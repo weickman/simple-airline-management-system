@@ -87,15 +87,15 @@ create table flight (
     route varchar(30),
     cost float,
     airline varchar(30),
-    airplane char(6),
+    tail_num char(6),
     progress integer,
     flight_status char(9),
     next_time time,
     primary key (flightID),
-    unique key (airline, airplane),
+    unique key (airline, tail_num),
     foreign key (route) references route(routeID) on update restrict on delete restrict,
     foreign key (airline) references airplane(airlineID) on delete restrict on update cascade,
-    foreign key (airplane) references airplane(tail_num) on update restrict on delete cascade
+    foreign key (tail_num) references airplane(tail_num) on update restrict on delete cascade
 ) ENGINE=InnoDB;
 
 drop table if exists person;
@@ -166,8 +166,8 @@ create table vacation (
     foreign key (destination_airport) references airport(airportID) on update restrict on delete restrict
 ) ENGINE=InnoDB;
 
-drop table if exists routes_contain;
-create table routes_contain (
+drop table if exists contains;
+create table contains (
 	leg varchar(6),
     route varchar(30),
     sequence_number integer check (sequence_number > 0),
