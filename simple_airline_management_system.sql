@@ -85,17 +85,16 @@ drop table if exists flight;
 create table flight (
 	flightID char(5),
     route varchar(30),
-    cost float,
+    cost float check (cost > 0),
     airline varchar(30),
     tail_num char(6),
-    progress integer,
-    flight_status char(9),
-    next_time time,
-    primary key (flightID),
+    progress integer check (progress >= 0),
+    flight_status char(9) check (flight_status = 'on_ground' or flight_status = 'in_flight'),
+    next_time time not null,
+    primary key (flightID), 	
     unique key (airline, tail_num),
     foreign key (route) references route(routeID) on update restrict on delete restrict,
-    foreign key (airline) references airplane(airlineID) on delete restrict on update cascade,
-    foreign key (tail_num) references airplane(tail_num) on update restrict on delete cascade
+    foreign key (airline, tail_num) references airplane(airlineID, tail_num) on delete restrict on update cascade
 ) ENGINE=InnoDB;
 
 drop table if exists person;
@@ -103,7 +102,7 @@ create table person (
 	personID integer,
     fname varchar(100) not null,
     lname varchar(100),
-    current_location char(8),
+    current_location char(8) not null,
     primary key (personID),
     foreign key (current_location) references location(locID) on delete restrict on update restrict
 ) ENGINE=InnoDB;
@@ -111,12 +110,12 @@ create table person (
 drop table if exists pilot;
 create table pilot (
 	personID integer,
-    taxID char(11),
-    experience integer,
+    taxID char(11) not null,
+    experience integer check (experience >= 0),
     current_flight char(5),
-    has_jet_license boolean,
-    has_prop_license boolean,
-    has_test_license boolean,
+    has_jet_license boolean not null,
+    has_prop_license boolean not null,
+    has_test_license boolean not null,
     primary key (personID),
     unique key (taxID),
     foreign key (personID) references person(personID) on delete cascade on update cascade,
@@ -126,7 +125,7 @@ create table pilot (
 drop table if exists passenger;
 create table passenger (
 	personID integer,
-    miles integer not null,
+    miles integer check (miles >= 0),
     funds float check (funds >= 0),
     primary key (personID),
     foreign key (personID) references person(personID) on update restrict on delete cascade
@@ -159,7 +158,7 @@ create table leg (
 drop table if exists vacation;
 create table vacation (
 	personID integer,
-    destination_airport char(3),
+    destination_airport char(3) not null,
     sequence_number integer check (sequence_number > 0),
     primary key (personID, destination_airport, sequence_number),
     foreign key (personID) references person(personID) on update restrict on delete cascade,
