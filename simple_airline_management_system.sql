@@ -84,7 +84,7 @@ create table jet (
 drop table if exists flight;
 create table flight (
 	flightID char(5),
-    route varchar(30),
+    route varchar(30) not null,
     cost float check (cost > 0),
     airline varchar(30),
     tail_num char(6),
